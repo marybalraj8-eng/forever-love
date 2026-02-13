@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Forever Love | Ammu & Pappu</title>
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --secondary-pink: #ff758c;
+            --dark-bg: #0a0a0a;
+            --glass-white: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight on mobile */
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden; /* Critical for mobile */
+            line-height: 1.6;
+        }
+
+        /* Responsive Navigation */
+        nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            background: rgba(10, 10, 10, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hero Section - Mobile Height Fix */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .hero h2 { 
+            font-size: clamp(28px, 8vw, 60px); 
+            margin-bottom: 30px; 
+            padding: 0 10px;
+        }
+
+        /* Compact Timer for Mobile */
+        #timer {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2x2 grid on small phones */
+            gap: 10px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        @media (min-width: 480px) {
+            #timer { grid-template-columns: repeat(4, 1fr); max-width: 500px; }
+        }
+
+        .timer-segment {
+            background: var(--glass-white);
+            padding: 15px 5px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .timer-segment div { font-size: 22px; font-weight: bold; color: var(--primary-pink); }
+        .timer-segment span { font-size: 9px; text-transform: uppercase; opacity: 0.7; }
+
+        /* Cards & Content */
+        section { padding: 60px 15px; max-width: 800px; margin: 0 auto; }
+        
+        .glass-card {
+            background: var(--glass-white);
+            padding: 30px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Mobile Gallery - 2 columns */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1 / 1; /* Makes them square */
+            border-radius: 15px;
+            overflow: hidden;
+            background: #222;
+        }
+
+        .gallery img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Modal - Better Mobile Sizing */
+        #loveModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #151515;
+            padding: 30px 20px;
+            border-radius: 25px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--primary-pink);
+            position: relative;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary-pink);
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            width: auto;
+            min-width: 200px;
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 20px; right: 20px; /* Moved to right for easier thumb access */
+            background: var(--primary-pink);
+            border: none; width: 50px; height: 50px;
+            border-radius: 50%; color: white;
+            z-index: 1500; font-size: 20px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            will-change: transform;
+            animation: moveHeart 3s linear forwards;
+            z-index: 3000;
+        }
+
+        @keyframes moveHeart {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        footer { padding: 40px 20px; text-align: center; font-size: 14px; opacity: 0.6; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#about">Story</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#message">Message</a>
+</nav>
+
+<section class="hero" id="home">
+    <h2>You Are My Happiness ❤️</h2>
+    
+    <div id="timer">
+        <div class="timer-segment"><div id="days">00</div><span>Days</span></div>
+        <div class="timer-segment"><div id="hours">00</div><span>Hrs</span></div>
+        <div class="timer-segment"><div id="mins">00</div><span>Mins</span></div>
+        <div class="timer-segment"><div id="secs">00</div><span>Secs</span></div>
+    </div>
+
+    <button class="btn" onclick="openLoveModal()">Open My Heart</button>
+</section>
+
+<section id="about">
+    <div class="glass-card">
+        <h2 style="color: var(--primary-pink)">Our Story 💕</h2>
+        <p style="margin-top:15px; font-size: 16px;">
+            Ammu....!<br>
+            Ne en life la epdi vandha nu theriyala di,<br>
+            Enaku ne matum than venum, epovum ne en kuda iru di ammu adhu podhum....<br>
+            ✨✨✨✨✨✨✨✨
+        </p>
+    </div>
+</section>
+
+<section id="gallery">
+    <h2 style="margin-bottom:15px">Memories 📸</h2>
+    <div class="gallery">
+        <div class="gallery-item"><img src="IMG-20250928-WA0006.jpg" alt="1"></div>
+        <div class="gallery-item"><img src="IMG-20250706-WA0000.jpg" alt="2"></div>
+        <div class="gallery-item"><img src="IMG-20250928-WA0002.jpg" alt="3"></div>
+        <div class="gallery-item"><img src="Title.jpg" alt="4"></div>
+    </div>
+</section>
+
+<section id="message">
+    <div class="glass-card" style="border-top: 4px solid var(--primary-pink);">
+        <p style="font-size:18px; color: #ff758c; font-weight: bold; font-style: italic;">
+            "Epovum ne enaku spl di ammmu. I love you so much da ❤️ En kudave iru ammu."
+        </p>
+    </div>
+</section>
+
+<div id="loveModal">
+    <div class="modal-content">
+        <h2 style="color: var(--primary-pink); margin-bottom: 15px;">My Dear Ammu...</h2>
+        <p id="modalText" style="line-height: 1.6; font-size: 16px;"></p>
+        <button class="btn" style="margin-top: 25px; min-width: 150px;" onclick="closeLoveModal()">Close</button>
+    </div>
+</div>
+
+<footer>
+    Made with ❤️ by <b>Your Pappu</b>
+</footer>
+
+<button class="music-btn" onclick="toggleMusic()" id="mBtn">🎵</button>
+
+<audio id="bgMusic" loop>
+    <source src="Nenacha_Vaazhkka_Venumunnu_💔_Nenjam_Kedandhu_Yengudhae___Sapta_SagaradaacheElla___Neelothi_Song_Edit(256k).mp3" type="audio/mp3">
+</audio>
+
+<script>
+    let music = document.getElementById("bgMusic");
+    let playing = false;
+
+    function toggleMusic(){
+        if(!playing){
+            music.play().catch(() => alert("Tap anywhere first to play music!"));
+            document.getElementById("mBtn").innerHTML = "⏸️";
+            playing = true;
+        } else {
+            music.pause();
+            document.getElementById("mBtn").innerHTML = "🎵";
+            playing = false;
+        }
+    }
+
+    const startDate = new Date("June 07, 2024 00:00:00").getTime();
+    function updateTimer() {
+        const diff = new Date().getTime() - startDate;
+        document.getElementById("days").innerHTML = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById("hours").innerHTML = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("mins").innerHTML = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById("secs").innerHTML = Math.floor((diff % (1000 * 60)) / 1000);
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    const modal = document.getElementById("loveModal");
+    const modalP = document.getElementById("modalText");
+    const loveMessage = "Naa eluthiya varigal...! \n\nUnnai kandu viyandha ennai ennavendru solvadhu...? un alagai pada varthai illai, unnai thavira vera ondrum en manadhill illai...! \n\nNee illamal nan illai, nan illamal ne illaai. Avalai ennidam irundhu pirithu vedathe kadavule plz... ❤️";
+
+    function typeEffect(text, i) {
+        if (i < text.length) {
+            modalP.innerText += text.charAt(i);
+            setTimeout(() => typeEffect(text, i + 1), 50);
+        }
+    }
+
+    function openLoveModal() {
+        modal.style.display = "flex";
+        modalP.innerText = "";
+        typeEffect(loveMessage, 0);
+        for(let i=0; i<15; i++) setTimeout(createHeart, i * 100);
+    }
+
+    function closeLoveModal() { modal.style.display = "none"; }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-particle');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = '100vh';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+    }
+</script>
+</body>
+</html>
